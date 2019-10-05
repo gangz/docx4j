@@ -89,6 +89,18 @@ public class Indent extends AbstractParagraphProperty {
 		
 	}
 	
+	public static Indent createIndentWithCssTextIndent(CSSValue value) {	
+		
+		Ind ind = Context.getWmlObjectFactory().createPPrBaseInd();
+		CSSPrimitiveValue cssPrimitiveValue = (CSSPrimitiveValue)value;	
+		int twip = getTwip(cssPrimitiveValue);
+		if (twip<0)
+			ind.setHanging(BigInteger.valueOf(0-twip) );	
+		else
+			ind.setFirstLine(BigInteger.valueOf(twip));
+		return  new Indent(ind);
+	}
+
 	public Indent(CSSValue value) {	
 		
 		debug(CSS_NAME, value);
@@ -319,7 +331,11 @@ public class Indent extends AbstractParagraphProperty {
 	
 	@Override
 	public void set(PPr pPr) {
-		pPr.setInd( (Ind)this.getObject() );
+		if (pPr.getInd()!=null) {
+			pPr.getInd().merge((Ind)this.getObject());
+		}else {
+			pPr.setInd( (Ind)this.getObject() );
+		}
 	}
 	
 }

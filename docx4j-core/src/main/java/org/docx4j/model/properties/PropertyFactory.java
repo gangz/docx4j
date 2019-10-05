@@ -627,6 +627,8 @@ public class PropertyFactory {
 			} else if (name.equals(LineSpacing.CSS_NAME )) {
 				// line-height
 				return new LineSpacing(value);
+			} else if (name.equals("text-indent")) {
+				return Indent.createIndentWithCssTextIndent(value);
 			}
 			
 			// Note:  paragraph border

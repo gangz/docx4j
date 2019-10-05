@@ -21,6 +21,7 @@
 
 package org.docx4j.wml; 
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 
 import javax.xml.bind.Unmarshaller;
@@ -1496,6 +1497,24 @@ public class PPrBase implements Child
         public void afterUnmarshal(Unmarshaller unmarshaller, Object parent) {
             setParent(parent);
         }
+
+		public void merge(Ind object) {
+			Field[] fields = this.getClass().getDeclaredFields();
+			for (Field field:fields) {
+				if (!field.isAccessible())
+					field.setAccessible(true);
+				try {
+					if (field.get(object)!=null && 
+							field.get(this)==null) {
+						field.set(this, field.get(object));
+					}
+				} catch (IllegalArgumentException | IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+
 
     }
 
